@@ -1,24 +1,17 @@
-library(readxl)
-library(gdata)
-library(xts)
-library(dplyr)
-library(quantmod)
 library(tseries)
 
-sep11travel <- read.xls('PTSF-Datasets/Sept11Travel.xls', 
-                        stringsAsFactors=FALSE, )
+sep11travel <- read.csv('./Data/Sept11Travel.csv')
+View(sep11travel)
 
-colnames(sep11travel) <- c('Month', 'Air', 'Rail', 'Auto')
-sep11travel$Month <- strftime(sep11travel$Month, format="%m-%y")
-sep11travel$Air <- as.numeric(gsub(",","",sep11travel$Air))
-sep11travel$Rail <- as.numeric(gsub(",","",sep11travel$Rail))
-summary(sep11travel)
+air.ts <- ts(sep11travel$air, start=c(1990, 1), end=c(2004, 1), frequency=12)
+plot(air.ts)
 
-head(sep11travel)
-tail(sep11travel, 12)
+rail.ts <- ts(sep11travel$rail, start=c(1990, 1), end=c(2004, 1), frequency=12)
+plot(rail.ts)
 
-plot(sep11travel$Rail, type='l', ylim = c(0, max(sep11travel$Rail)))
-lines(sep11travel$Air, type='l', col='green')
+car.ts <- ts(sep11travel$car, start=c(1990, 1), end=c(2004, 1), frequency=12)
+plot(car.ts)
 
-sep11travel.ts <- ts(sep11travel$Air.RPM..000s., start = c(1990,1), end = c(2004, 4), 
-                     freq = 12)
+plot(decompose(air.ts))
+plot(decompose(rail.ts))
+plot(decompose(car.ts))
